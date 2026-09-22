@@ -30,3 +30,34 @@ CAB-SFDA-PGAT/
 │ └── 3_CAB_SFDA_PGAT_v2_AID_CLRS.ipynb
 └── data/
 └── README.md
+
+## Requirements
+
+```bash
+pip install -r requirements.txt
+```
+data/
+├── source_aid_split/
+│   ├── train/
+│   │   ├── Farmland/
+│   │   ├── Forest/
+│   │   ├── Industrial/
+│   │   ├── Meadow/
+│   │   ├── Parking/
+│   │   ├── Residential/
+│   │   └── River/
+│   └── test/
+│       └── ... (same classes)
+└── target_clrs_split/
+    ├── train/
+    │   └── ... (same classes)
+    └── test/
+        └── ... (same classes)
+```
+@article{khelifi2026cabsfda,
+  title={CAB-SFDA: Class-Aware Balanced Source-Free Domain Adaptation for Remote Sensing Scene Classification},
+  author={Khelifi, Manel Khazri and Ammar, Adel and Boulila, Wadii and Farah, Imed Riadh},
+  journal={},
+  year={2026}
+}
+```
