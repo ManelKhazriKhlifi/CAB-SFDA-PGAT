@@ -54,6 +54,35 @@ data/
     └── test/
         └── ... (same classes)
 ```
+## Datasets
+
+All datasets used in this study are publicly available. Please download them from their official sources.
+
+### Cross-Sensor Benchmark I: NWPU-RESISC45 ↔ NaSC-TG2
+
+| Dataset | Description | Official Link |
+| :--- | :--- | :--- |
+| **NWPU-RESISC45** | 45 scene classes, 700 images per class, 256×256 pixels, 0.2–30m resolution. Created by Northwestern Polytechnical University. | https://gcheng-nwpu.github.io |
+| **NaSC-TG2** | 10 scene classes, hyperspectral imagery from Tiangong-2, 0.40–1.04 µm spectral range. Created by Chinese Academy of Sciences. | http://www.msadc.cn/main/setsubDetail?id=1370312964720037889 |
+
+### Cross-Sensor Benchmark II: WHU-RS19 ↔ EuroSAT
+
+| Dataset | Description | Official Link |
+| :--- | :--- | :--- |
+| **WHU-RS19** | 19 land-use classes, 50 images per class, 600×600 pixels, 0.5m resolution. Released by Wuhan University in 2012. | https://captain-whu.github.io/BED4RS/ |
+| **EuroSAT** | 10 land-use classes, 2,000–3,000 images per class, 64×64 pixels, 13 spectral bands from Sentinel-2. | https://github.com/phelber/eurosat |
+
+### Cross-Scene Benchmark
+
+| Dataset | Description | Official Link |
+| :--- | :--- | :--- |
+| **AID** | 30 scene classes, 220–420 images per class, 600×600 pixels, 0.5–8m resolution. Collected from Google Earth. | https://captain-whu.github.io/AID/ |
+| **CLRS** | 25 scene classes, 600 images per class, 256×256 pixels, 0.26–8.85m resolution. Collected from Google Earth, Bing Maps, and Tianditu. | https://github.com/lehaifeng/CLRS |
+| **MLRSNet** | 46 scene categories, 1,500–3,000 images per category, 256×256 pixels, 0.1–10m resolution. | https://github.com/cugbrs/MLRSNet |
+| **RSSCN7** | 7 scene classes (grass, forest, farmland, parking, residential, industrial, river/lake), 400 images per class, 400×400 pixels. | https://github.com/palewithout/RSSCN7 |
+
+### Citations
+
 ```bibtex
 @article{khelifi2026cabsfda,
   title={CAB-SFDA: Class-Aware Balanced Source-Free Domain Adaptation for Remote Sensing Scene Classification},
