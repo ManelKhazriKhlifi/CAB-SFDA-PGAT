@@ -63,7 +63,7 @@ All datasets used in this study are publicly available. Please download them fro
 | Dataset | Description | Official Link |
 | :--- | :--- | :--- |
 | **NWPU-RESISC45** | 45 scene classes, 700 images per class, 256×256 pixels, 0.2–30m resolution. Created by Northwestern Polytechnical University. | https://gcheng-nwpu.github.io |
-| **NaSC-TG2** | 10 scene classes, hyperspectral imagery from Tiangong-2, 0.40–1.04 µm spectral range. Created by Chinese Academy of Sciences. | http://www.msadc.cn/main/setsubDetail?id=1370312964720037889 |
+| **NaSC-TG2** | 10 scene classes, hyperspectral imagery from Tiangong-2, 0.40–1.04 µm spectral range. Created by Chinese Academy of Sciences. | https://captain-whu.github.io/BED4RS/ |
 
 ### Cross-Sensor Benchmark II: WHU-RS19 ↔ EuroSAT
 
