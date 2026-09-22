@@ -22,19 +22,21 @@ CAB-SFDA is a source-free domain adaptation (SFDA) framework for remote sensing 
 | **Unified Target-Only Objective** | Information maximization + consistency + class-balanced pseudo-labeling + prototype attraction |
 
 ## Repository Structure
+```
 CAB-SFDA-PGAT/
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
 ├── notebooks/
-│ └── 3_CAB_SFDA_PGAT_v2_AID_CLRS.ipynb
+│   └── 3_CAB_SFDA_PGAT_v2_AID_CLRS.ipynb
 └── data/
-└── README.md
-
+    └── README.md
+```
 ## Requirements
 
 ```bash
 pip install -r requirements.txt
+```
 ```
 data/
 ├── source_aid_split/
@@ -54,6 +56,7 @@ data/
     └── test/
         └── ... (same classes)
 ```
+```bibtex
 @article{khelifi2026cabsfda,
   title={CAB-SFDA: Class-Aware Balanced Source-Free Domain Adaptation for Remote Sensing Scene Classification},
   author={Khelifi, Manel Khazri and Ammar, Adel and Boulila, Wadii and Farah, Imed Riadh},
