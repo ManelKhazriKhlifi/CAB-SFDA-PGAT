@@ -82,7 +82,15 @@ All datasets used in this study are publicly available. Please download them fro
 | **RSSCN7** | 7 scene classes (grass, forest, farmland, parking, residential, industrial, river/lake), 400 images per class, 400×400 pixels. | https://github.com/palewithout/RSSCN7 |
 
 ### Citations
-
+```bibtex
+@misc{khelifi2026cabsfda,
+  title={{CAB-SFDA}: Class-Aware Balanced Source-Free Domain Adaptation for Remote Sensing Scene Classification},
+  author={Khelifi, Manel Khazri and Ammar, Adel and Boulila, Wadii and Farah, Imed Riadh},
+  year={2026},
+  howpublished={\url{https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT}},
+  note={GitHub repository}
+}
+```
 ```bibtex
 @article{khelifi2026cabsfda,
   title={CAB-SFDA: Class-Aware Balanced Source-Free Domain Adaptation for Remote Sensing Scene Classification},
