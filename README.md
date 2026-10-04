@@ -89,7 +89,7 @@ All datasets used in this study are publicly available. Please download them fro
 | **MLRSNet** | 46 scene categories, 1,500–3,000 images per category, 256×256 pixels, 0.1–10m resolution. | https://github.com/cugbrs/MLRSNet |
 | **RSSCN7** | 7 scene classes (grass, forest, farmland, parking, residential, industrial, river/lake), 400 images per class, 400×400 pixels. | https://github.com/palewithout/RSSCN7 |
 ### Results
-## 📂 Code for Ablation Studies
+## Code for Ablation Studies
 
 All ablation scripts are available in the repository root. Each script corresponds to a specific table or figure in the paper.
 
@@ -103,7 +103,7 @@ All ablation scripts are available in the repository root. Each script correspon
 | Hyperparameter Sensitivity (λ_pl, λ_cons, γ, η_l) | [`run_all.sh`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/run_all.sh) (or modify `config.py`) |
 | Per-class F1 / Precision / Recall (e.g., A2M) | [`per_class_metrics.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/per_class_metrics.py) |
 
-### 🚀 How to Run All Ablations
+### How to Run All Ablations
 First, train the source model once, then execute any ablation script:
 
 ```bash
