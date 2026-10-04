@@ -85,15 +85,15 @@ All datasets used in this study are publicly available. Please download them fro
 
 All ablation scripts are available in the repository root. Each script corresponds to a specific table or figure in the paper.
 
-| Paper Reference | Ablation Study | Script / File |
-| :--- | :--- | :--- |
-| **Table 8** | Backbone Selection (ResNet-18/50/101) | [`ablation_backbone.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/ablation_backbone.py) |
-| **Table 11** | Loss-wise Ablation (w/o L_pl, L_im, etc.) | [`ablation_losses.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/ablation_losses.py) |
-| **Table 12** | Mechanism-wise Ablation (Class balancing, Prototype, Threshold, etc.) | [`ablation_mechanisms.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/ablation_mechanisms.py) |
-| **Table 13** | Imbalance-Sensitivity Study (Ratios 1.0–5.0) | [`ablation_imbalance.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/ablation_imbalance.py) |
-| **Tables 9 & 10** | PGAT Final-State Diagnostics & Class-Weight Evolution | [`diagnostics_pgat.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/diagnostics_pgat.py) |
-| **Section 5.5** | Hyperparameter Sensitivity (λ_pl, λ_cons, γ, η_l) | [`run_all.sh`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/run_all.sh) (or modify `config.py`) |
-| **Per-Class Analysis** | Per-class F1 / Precision / Recall (e.g., A2M) | [`per_class_metrics.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/per_class_metrics.py) |
+| Ablation Study | Script / File |
+| :--- | :--- |
+| Backbone Selection (ResNet-18/50/101) | [`ablation_backbone.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/ablation_backbone.py) |
+| Loss-wise Ablation (w/o L_pl, L_im, etc.) | [`ablation_losses.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/ablation_losses.py) |
+| Mechanism-wise Ablation (Class balancing, Prototype, Threshold, etc.) | [`ablation_mechanisms.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/ablation_mechanisms.py) |
+| Imbalance-Sensitivity Study (Ratios 1.0–5.0) | [`ablation_imbalance.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/ablation_imbalance.py) |
+| PGAT Final-State Diagnostics & Class-Weight Evolution | [`diagnostics_pgat.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/diagnostics_pgat.py) |
+| Hyperparameter Sensitivity (λ_pl, λ_cons, γ, η_l) | [`run_all.sh`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/run_all.sh) (or modify `config.py`) |
+| Per-class F1 / Precision / Recall (e.g., A2M) | [`per_class_metrics.py`](https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT/blob/main/per_class_metrics.py) |
 
 ### 🚀 How to Run All Ablations
 First, train the source model once, then execute any ablation script:
