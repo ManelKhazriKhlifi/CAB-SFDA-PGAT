@@ -26,9 +26,9 @@ CAB-SFDA adapts a source-trained model to an unlabeled target domain **without a
 | Setting | Value |
 | :--- | :--- |
 | Source pretraining | 50 epochs, Adam, lr 1e-3, batch 128 |
-| Source-free adaptation | 15 epochs, Adam, lr 2e-4, batch 128, **no early stopping** |
+| Source-free adaptation | 15 epochs, Adam, lr 2e-4, batch 128|
 | Frozen during adaptation | classifier **and** all BatchNorm statistics (`CFG.freeze_bn = True`) |
-| Checkpoint | **final epoch only**, no checkpoint selection on target data |
+| Checkpoint | **final epoch only**|
 | Target labels | used **once**, after adaptation, for the final evaluation |
 | Seeds | 0, 1, 2 (results reported as mean ± std) |
 | Backbone | ImageNet-pretrained ResNet-50, 128-d projection head, 128×128 input |
@@ -53,7 +53,6 @@ CAB-SFDA-PGAT/
 ├── evaluate.py               # single post-adaptation evaluation
 ├── per_class_metrics.py      # confusion matrix + per-class figure
 ├── diagnostics_pgat.py       # PGAT threshold trajectories, feature extraction
-├── visualize_predictions.py  # Grad-CAM++ visualizations
 ├── run_all.sh                # all tasks × all seeds
 │
 ├── run_baseline.py           # runs one SFDA baseline
@@ -67,8 +66,8 @@ CAB-SFDA-PGAT/
 ├── collect_results.py        # gathers runs/ into Results_PGAT/{TASK}/seed_N/
 ├── aggregated_results.py     # OA / BAcc / macro-F1, mean ± std over seeds
 ├── aggregate_results.py      # + per-class metrics and mean confusion matrices
-├── per_class_tables.py       # per-class recall / precision / F1 tables (LaTeX)
-├── pgat_diagnostics_table.py # PGAT final-state diagnostics tables (LaTeX)
+├── per_class_tables.py       # per-class recall / precision / F1 tables
+├── pgat_diagnostics_table.py # PGAT final-state diagnostics tables
 ├── plot_mean_cm.py           # seed-averaged confusion matrices
 ├── feature_metrics.py        # t-SNE figures + silhouette / MMD / centroid metrics
 ├── analysis/
@@ -85,10 +84,6 @@ CAB-SFDA-PGAT/
 ```bash
 pip install -r requirements.txt
 ```
-
-Tested with Python 3.8, PyTorch 2.0.1 and CUDA 11.7. A CUDA GPU is recommended (CPU works but is slow). `grad-cam` is only needed for `visualize_predictions.py`.
-
----
 
 ## Data
 
@@ -236,15 +231,15 @@ The table and figure scripts read one folder per seed. Gather the outputs first:
 ```bash
 python collect_results.py                        # runs/ -> Results_PGAT/{TASK}/seed_N/
 python aggregated_results.py --all               # mean ± std per task group (cross-scene, NWPU↔NaSC, EuroSAT↔WHU)
-python per_class_tables.py                       # per-class recall / precision / F1 (LaTeX)
-python pgat_diagnostics_table.py                 # PGAT final-state diagnostics (LaTeX)
+python per_class_tables.py                       # per-class recall / precision / F1 
+python pgat_diagnostics_table.py                 # PGAT final-state diagnostics 
 python plot_mean_cm.py --all                     # seed-averaged, row-normalized confusion matrices
 python feature_metrics.py --all --tsne-summary   # t-SNE figures + feature-alignment metrics
 ```
 
 Set `RESULTS_DIR` to read from a folder other than `./Results_PGAT`.
 
-**t-SNE.** For each task, the figures show the representative seed (the seed whose OA is closest to the three-seed mean). The three-seed mean ± std of the matching metric (MMD for domain alignment, silhouette for category alignment) is printed under each figure. Both domains are embedded by the same network: the source model before adaptation, the adapted model after.
+**t-SNE.** For each task, the figures show the representative seed (the seed whose OA is closest to the three-seed mean). The three-seed mean ± std of the matching metric (MMD for domain alignment, silhouette for category alignment). Both domains are embedded by the same network: the source model before adaptation, the adapted model after.
 
 ---
 
@@ -258,17 +253,5 @@ If you use this code, please cite:
   author  = {Khelifi, Manel Khazri and Ammar, Adel and Boulila, Wadii and Farah, Imed Riadh},
   journal = {},
   year    = {2026}
-}
-```
-
-Until the paper is published, you can cite the repository:
-
-```bibtex
-@misc{khelifi2026cabsfdacode,
-  title        = {{CAB-SFDA}: Class-Aware Balanced Source-Free Domain Adaptation for Remote Sensing Scene Classification},
-  author       = {Khelifi, Manel Khazri and Ammar, Adel and Boulila, Wadii and Farah, Imed Riadh},
-  year         = {2026},
-  howpublished = {\url{https://github.com/ManelKhazriKhlifi/CAB-SFDA-PGAT}},
-  note         = {GitHub repository}
 }
 ```
