@@ -63,13 +63,6 @@ CAB-SFDA-PGAT/
 ├── ablation_backbone.py      # ResNet-18 / 50 / 101
 ├── ablation_imbalance.py     # controlled imbalance on the MLRSN target
 │
-├── collect_results.py        # gathers runs/ into Results_PGAT/{TASK}/seed_N/
-├── aggregated_results.py     # OA / BAcc / macro-F1, mean ± std over seeds
-├── aggregate_results.py      # + per-class metrics and mean confusion matrices
-├── per_class_tables.py       # per-class recall / precision / F1 tables
-├── pgat_diagnostics_table.py # PGAT final-state diagnostics tables
-├── plot_mean_cm.py           # seed-averaged confusion matrices
-├── feature_metrics.py        # t-SNE figures + silhouette / MMD / centroid metrics
 ├── analysis/
 │   └── statistical_tests.py  # paired t-tests vs. baselines
 │
