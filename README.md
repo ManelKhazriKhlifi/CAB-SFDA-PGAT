@@ -209,31 +209,6 @@ Mechanism-wise variants (rows marked *ours* are the full method, identical to th
 
 ---
 
-## Results: aggregation, tables and figures
-
-```bash
-RESULTS_DIR=runs python aggregated_results.py --all --method cab_sfda   # read runs/{TASK}/seed_N/cab_sfda/
-RESULTS_DIR=runs python aggregated_results.py --all --method shot       # any baseline
-python analysis/statistical_tests.py                                    # paired t-tests, all 16 tasks
-```
-
-The table and figure scripts read one folder per seed. Gather the outputs first:
-
-```bash
-python collect_results.py                        # runs/ -> Results_PGAT/{TASK}/seed_N/
-python aggregated_results.py --all               # mean ± std per task group (cross-scene, NWPU↔NaSC, EuroSAT↔WHU)
-python per_class_tables.py                       # per-class recall / precision / F1 
-python pgat_diagnostics_table.py                 # PGAT final-state diagnostics 
-python plot_mean_cm.py --all                     # seed-averaged, row-normalized confusion matrices
-python feature_metrics.py --all --tsne-summary   # t-SNE figures + feature-alignment metrics
-```
-
-Set `RESULTS_DIR` to read from a folder other than `./Results_PGAT`.
-
-**t-SNE.** For each task, the figures show the representative seed (the seed whose OA is closest to the three-seed mean). The three-seed mean ± std of the matching metric (MMD for domain alignment, silhouette for category alignment). Both domains are embedded by the same network: the source model before adaptation, the adapted model after.
-
----
-
 ## Citation
 
 If you use this code, please cite:
