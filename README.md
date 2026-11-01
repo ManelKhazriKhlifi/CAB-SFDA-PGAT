@@ -51,8 +51,6 @@ CAB-SFDA-PGAT/
 ├── train_source.py           # source pretraining (final-epoch checkpoint)
 ├── adapt.py                  # CAB-SFDA source-free adaptation loop
 ├── evaluate.py               # single post-adaptation evaluation
-├── per_class_metrics.py      # confusion matrix + per-class figure
-├── diagnostics_pgat.py       # PGAT threshold trajectories, feature extraction
 ├── run_all.sh                # all tasks × all seeds
 │
 ├── run_baseline.py           # runs one SFDA baseline
