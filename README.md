@@ -29,7 +29,6 @@ CAB-SFDA adapts a source-trained model to an unlabeled target domain **without a
 | Source-free adaptation | 15 epochs, Adam, lr 2e-4, batch 128|
 | Frozen during adaptation | classifier **and** all BatchNorm statistics (`CFG.freeze_bn = True`) |
 | Checkpoint | **final epoch only**|
-| Target labels | used **once**, after adaptation, for the final evaluation |
 | Seeds | 0, 1, 2 (results reported as mean ± std) |
 | Backbone | ImageNet-pretrained ResNet-50, 128-d projection head, 128×128 input |
 
