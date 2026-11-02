@@ -53,6 +53,7 @@ CAB-SFDA-PGAT/
 ├── evaluate.py               # single post-adaptation evaluation
 ├── run_all.sh                # all tasks × all seeds
 │
+├──aggregated_results.py
 ├── run_baseline.py           # runs one SFDA baseline
 ├── baselines/                # SHOT, NRC, CoWA, MBNS, G-SFDA, AaD, DaC, SMNA (+ shared helpers)
 │
