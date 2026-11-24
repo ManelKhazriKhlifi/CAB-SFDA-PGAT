@@ -65,6 +65,13 @@ has the lowest seed-to-seed variability of all methods, at 57% of the training t
 DaC. Per-task results, ablations, statistical tests, and the discussion of the failure cases are in
 the paper; `aggregate.py` regenerates all of them.
 
+`paper_results/run_inventory.csv` lists the 3,182 runs behind the paper (experiment group, method,
+variant, backbone, task, seed) with the test accuracy of the source model and of the adapted model
+in each run, taken from the run logs. Every number in the tables of the paper is a mean over rows of
+this file. The configuration of a run is `configs/defaults.yaml` + `configs/selected.yaml` + the
+overrides of its variant in `cabsfda/experiments.py` (`python launch.py --groups <group> --dry-run`
+lists them).
+
 ## Repository structure
 
 ```
@@ -80,13 +87,14 @@ configs/
   selected.yaml          configuration chosen by the label-free pilot (teacher momentum 0.999)
   datasets.yaml          dataset folders, class mapping, benchmarks, tasks, split settings
 splits/                  released train/test splits of the paper (SHA-1 per image), see "Data splits"
+paper_results/           run_inventory.csv: per-run accuracies of the 3,182 runs of the paper
 prepare_data.py          raw datasets -> data/splits/ (de-duplication + stratified 70/30 split)
 import_splits.py         pre-split folders -> audit + disjoint data/splits/
 export_splits.py         data/splits/ -> portable splits/ for release
 launch.py                runs experiment groups on several GPUs (resumable)
 run.py                   a single run
 select_hparams.py        label-free hyperparameter selection (SND) from the pilot runs
-check_results.py         consistency audit of all result files
+check_results.py         consistency audit and coverage check of all result files
 aggregate.py             all tables (LaTeX, CSV, Markdown) and statistical tests -> tables/
 make_figures.py          confusion matrices, t-SNE, sensitivity curves, radar, PGAT dynamics -> figures/
 run_all.sh               the complete pipeline, in order
@@ -146,7 +154,7 @@ the `root:` entries if your layout differs.
 | Benchmark | Domains | Shared classes |
 |---|---|---|
 | Cross-scene (12 tasks) | AID, CLRS, MLRSN, RSSCN7 | farmland, forest, industrial, meadow, parking, residential, river |
-| Cross-sensor I (N2G, G2N) | NWPU-RESISC45, NaSC-TG2 | beach, circular farmland, cloud, desert, forest, mountain, rectangular farmland, residential, river, snowberg |
+| Cross-sensor I (N2G, G2N) | NWPU-RESISC45, NaSC-TG2 | beach, circular farmland, cloud, desert, forest, mountain, rectangular farmland, residential (NWPU: dense residential), river, snowberg |
 | Cross-sensor II (E2W, W2E) | WHU-RS19, EuroSAT | farmland (AnnualCrop), forest, industrial, meadow (Pasture), residential, river |
 
 ## Data splits
@@ -156,7 +164,11 @@ identified by the SHA-1 of their bytes, identical files are kept once, images fi
 are dropped, and the unique images of each class are split 70/30 with a fixed seed (2024). The
 source model is trained on the 70% part of the source domain; adaptation uses the 70% part of the
 target domain without labels; all accuracies are measured on the held-out 30% target test part.
-No test image, nor any identical copy of it, is used for training or adaptation.
+Within every task, no test image, nor any identical copy of it, is used for training or adaptation.
+
+No SHA-1 of a target test image occurs in the source training split of any of the 16 tasks.
+Identical files do occur across benchmark families that are never paired in a task (467 files in
+both MLRSN and NWPU-RESISC45, 141 in both AID and WHU-RS19). SHA-1 detects identical files only.
 
 **Splits of the paper.** `splits/<domain>/{train,test}.csv` list the images of every split by SHA-1,
 class, and file name. To rebuild exactly these splits from your copy of the datasets:
@@ -192,7 +204,7 @@ GPUS=0,1,2,3 JOBS_PER_GPU=2 WORKERS=6 bash run_all.sh 2>&1 | tee run_all.log
 
 ```bash
 python launch.py --groups main,baselines --gpus 0,1,2,3 --jobs-per-gpu 2
-python check_results.py                                  # warns about collapsed runs
+python check_results.py --groups main baselines          # audit; warns about collapsed runs
 python launch.py --groups ablation_losses,ablation_mechanisms,backbone --gpus 0,1,2,3 --jobs-per-gpu 2
 python launch.py --groups imbalance,sensitivity --gpus 0,1,2,3 --jobs-per-gpu 2
 python launch.py --groups timing --gpus 0,1,2,3 --jobs-per-gpu 1 --seeds 0

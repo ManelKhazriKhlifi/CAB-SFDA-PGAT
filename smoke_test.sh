@@ -48,7 +48,7 @@ fi
 
 CABSFDA_NO_SELECTED=1 $L --groups pilot --seeds 0 --tasks E2W
 CABSFDA_NO_SELECTED=1 python select_hparams.py --dry-run
-python check_results.py
+python check_results.py --partial
 python aggregate.py --out smoke/tables
 python make_figures.py --out smoke/figures
 echo "SMOKE TEST PASSED - outputs in smoke/tables and smoke/figures"

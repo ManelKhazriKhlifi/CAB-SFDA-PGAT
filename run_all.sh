@@ -40,7 +40,7 @@ else
 fi
 
 echo "== 3/7 main results + baselines";  $L --groups main,baselines
-echo "   collapse check";                  python check_results.py
+echo "   collapse check";                  python check_results.py --groups main baselines
 echo "== 4/7 ablations + backbones";     $L --groups ablation_losses,ablation_mechanisms,backbone
 echo "== 5/7 imbalance + sensitivity";   $L --groups imbalance,sensitivity
 echo "== 6/7 timing (one job per GPU)"

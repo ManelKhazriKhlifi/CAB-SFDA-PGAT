@@ -7,24 +7,31 @@ Checks: metrics recomputed from the confusion matrix; per-class recalls are atta
 the test-set class sizes; the CAB-SFDA accepted-sample counts equal the sum of per-epoch
 acceptances and stay below the number of samples seen; the run folder matches its stored
 config; every method sees the same source model and source-only accuracy for a given
-(task, seed, backbone); every group has the same seeds for all tasks.
+(task, seed, backbone); every group has the same seeds for all tasks; every run of the paper's
+experiment groups (cabsfda/experiments.py: DEFAULT_GROUPS) has a result (--partial to skip this).
 """
+import argparse
 import sys
 from collections import defaultdict
 
 import numpy as np
 
 from cabsfda.config import load_config
-from cabsfda.experiments import variant_overrides
+from cabsfda.experiments import DEFAULT_GROUPS, build_runs, variant_overrides
 from cabsfda.results import load_results
 
 
 def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--partial", action="store_true",
+                    help="only audit the results present (do not require every run of the paper)")
+    ap.add_argument("--groups", nargs="+", default=DEFAULT_GROUPS, help="groups whose coverage is required")
+    opt = ap.parse_args()
     cfg = load_config()
     df, full = load_results(cfg.results_dir)
     if df.empty:
-        print("no results found")
-        return 0
+        print(f"FAIL: no results found in {cfg.results_dir}")
+        return 1
     fails, n_checks = [], 0
 
     def check(ok, msg):
@@ -68,6 +75,16 @@ def main():
     for (g, m, v, a), sub in df.groupby(["group", "method", "variant", "arch"]):
         seed_sets = {t: frozenset(s.seed) for t, s in sub.groupby("task")}
         check(len(set(seed_sets.values())) == 1, f"{g}/{m}/{v}/{a}: tasks have different seeds {dict(seed_sets)}")
+
+    # coverage: every planned run of the required groups has a result
+    missing = []
+    if not opt.partial:
+        have = set(zip(df.group, df.method, df.variant, df.arch, df.task, df.seed))
+        for g in opt.groups:
+            for r in build_runs(g):
+                if (r.group, r.method, r.variant, r.arch, r.task, r.seed) not in have:
+                    missing.append(f"{r.group}/{r.method}/{r.variant}/{r.arch}/{r.task}/seed{r.seed}")
+        check(not missing, f"{len(missing)} planned runs have no result (first: {missing[:3]})")
 
     # collapse / degradation warnings (not failures: they describe results, not bookkeeping errors)
     warns = []

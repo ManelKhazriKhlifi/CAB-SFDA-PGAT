@@ -79,7 +79,10 @@ def main():
         out.write_text(yaml.safe_dump({
             "selected": best, "overrides": PILOT_GRID[best], "criterion": "mean rank of SND over pilot tasks",
             "pilot_tasks": tasks,
-            "snd": {v: {t: float(snd[v, t]) for t in tasks} for v in complete}}, sort_keys=False))
+            "min_pred_class_entropy": a.min_pce,
+            "snd": {v: {t: float(snd[v, t]) for t in tasks} for v in complete},
+            "pred_class_entropy": {v: {t: float(pce[v, t]) for t in tasks} for v in complete}},
+            sort_keys=False))
         print(f"-> {out}")
 
 

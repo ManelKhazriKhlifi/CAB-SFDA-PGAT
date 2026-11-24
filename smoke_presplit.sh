@@ -21,6 +21,6 @@ export CABSFDA_SET="results_dir=smoke_presplit/results splits_dir=smoke_presplit
 pretrained=false img_size=32 src_epochs=2 epochs=2 batch_size=16 src_batch_size=16 num_workers=0 amp=false \
 proto_min_count=5 imb_base=8"
 $L --groups main,baselines --seeds 0,1 --tasks E2W,W2E
-python check_results.py
+python check_results.py --partial
 python aggregate.py --out smoke_presplit/tables
 echo "PRE-SPLIT SMOKE TEST PASSED - outputs in smoke_presplit/"
