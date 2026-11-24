@@ -1,0 +1,11 @@
+# Exact versions used for the paper runs (Python 3.11, Linux x86_64).
+# PyTorch is installed separately by setup_env.sh, which picks the CUDA build from the driver:
+#   torch==2.7.1 torchvision==0.22.1 (CUDA 12.6 from PyPI; CUDA 11.8 or 12.8 builds from download.pytorch.org)
+# The code needs torch >= 2.3 (torch.amp.GradScaler("cuda")); it was also tested with torch 2.15.
+numpy==2.2.6
+scipy==1.15.3
+pandas==2.2.3
+scikit-learn==1.6.1
+matplotlib==3.10.3
+PyYAML==6.0.2
+pillow==11.2.1
