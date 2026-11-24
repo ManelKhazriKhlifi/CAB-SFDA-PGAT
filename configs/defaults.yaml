@@ -1,0 +1,122 @@
+# Default configuration for every run (paper Table 5).
+# Any key can be overridden per run with:  python run.py ... --set key=value
+# Experiment groups (cabsfda/experiments.py) override keys to build ablations,
+# sensitivity analyses and baselines. Every run writes the full resolved config
+# next to its results, so each number in the paper can be traced to a config.
+
+# ---------------------------------------------------------------- paths
+results_dir: results          # all run outputs (one folder per run)
+splits_dir: data/splits       # written by prepare_data.py or import_splits.py
+datasets_config: configs/datasets.yaml
+
+# ---------------------------------------------------------------- model
+arch: resnet50                # resnet18 | resnet34 | resnet50 | resnet101
+pretrained: true              # ImageNet weights (resnet18/34: IMAGENET1K_V1, resnet50/101: IMAGENET1K_V2)
+feat_dim: 128                 # projection head output (Linear -> BN1d -> ReLU)
+img_size: 128
+
+# ---------------------------------------------------------------- source training
+src_epochs: 50
+src_batch_size: 128
+src_lr: 1.0e-3                # Adam
+# The source model of the LAST epoch is used. No checkpoint selection is done
+# with any target data.
+
+# ---------------------------------------------------------------- adaptation (all methods)
+# The optimiser of the official SHOT / NRC / AaD / G-SFDA code, shared by every method.
+epochs: 15
+batch_size: 128
+optimizer: sgd                # sgd (momentum, Nesterov) | adam
+lr: 1.0e-2                    # projection head (and classifier if trainable)
+backbone_lr_mult: 0.1         # backbone lr = lr x 0.1
+momentum: 0.9
+weight_decay: 1.0e-3
+lr_schedule: poly             # lr x (1 + 10 p)^-0.75, p = iteration / total iterations | none
+grad_clip: 5.0                # max gradient norm (0 = off)
+freeze_classifier: true
+bn_mode: frozen               # frozen = BatchNorm running statistics kept from the source
+                              #          model (BN layers in eval mode, affine params trainable)
+                              # train  = BN statistics re-estimated on target batches
+amp: true                     # mixed precision on CUDA
+deterministic: true           # cudnn.deterministic (slower, reproducible)
+num_workers: 8
+save_predictions: true        # predictions.npz (test-set logits/labels) per run
+save_features: false          # features.npz for t-SNE (enabled for seed 0 of the main runs)
+log_pl_quality: true          # log pseudo-label accuracy with the hidden target labels.
+                              # Labels are used ONLY for logging, never in a loss or for
+                              # any selection; see cabsfda/cab_sfda.py.
+
+# ---------------------------------------------------------------- CAB-SFDA
+teacher: ema                  # ema = mean teacher gives pseudo-labels, PGAT inputs, prototypes and
+                              #       the distillation target | none = the student labels its own data
+ema_momentum: 0.99            # per iteration; configs/selected.yaml sets 0.999 (label-free pilot)
+lambda_im: 1.0                # SHOT's weight (diversity term against class collapse)
+lambda_pl: 0.3                # SHOT's cls_par
+lambda_cons: 0.3
+lambda_proto: 0.1
+temp_cons: 1.0                # temperature of the distillation KL
+im_mode: standard             # standard (entropy - diversity) | entropy_only
+cons_mode: oneway             # oneway = KL(sg[teacher weak] || student strong) | symmetric (student weak <-> strong) | none
+proto_loss: cosine            # cosine (ours) | mse (squared distance on raw features)
+
+# ---------------------------------------------------------------- class-aware memory
+proto_momentum: 0.9           # m
+memory_mode: ema              # ema (ours) | batch (no EMA) | static (built once from the
+                              # source model, never updated) | none (no memory at all)
+memory_update: gated          # gated = only PGAT-accepted samples (ours) | all = every prediction
+weighting: inv_sqrt           # inv_sqrt (ours) | inv_freq | uniform
+
+strong_flip: true             # the strong view also contains the horizontal flip of the weak view
+
+# ---------------------------------------------------------------- PGAT
+threshold: pgat               # pgat | pgat_global | pgat_conf_only | fixed | flexmatch | freematch
+threshold_lag: true           # true = threshold for batch t computed from batches < t (ours)
+tau_base: 0.90
+tau_min: 0.70
+tau_max: 0.95
+gamma: 0.10                   # with gamma=0.10 the raw threshold is confined to [0.85, 0.95];
+                              # tau_min/tau_max only bind for gamma > 0.1 (see paper Sec. 3.5)
+lambda_r: 0.5                 # weight of confidence vs prototype agreement in R_c
+tau_momentum: 0.9             # m_tau
+n_min: 3                      # min. predicted samples of a class in a batch to update tau_c
+proto_min_count: 100          # warm-up: accepted samples before r_c is used
+fixed_tau: 0.90               # used when threshold: fixed
+flexmatch_warmup: true        # FlexMatch threshold warm-up (Zhang et al., 2021)
+freematch_momentum: 0.9       # FreeMatch EMA (Wang et al., 2023). Their 0.999 assumes ~1M iterations;
+                              # 0.9 (= PGAT's m_tau) suits 15 epochs of adaptation
+
+# ---------------------------------------------------------------- baselines (shared protocol above)
+# Hyper-parameters follow the official repositories; see cabsfda/baselines/*.py.
+shot_cls_par: 0.3
+shot_ent_par: 1.0
+nrc_k: 5
+nrc_kk: 5
+aad_k: 5
+aad_alpha: 1.0
+aad_beta: 0.75
+aad_alpha_decay: false         # office-home setting of the official code (no decay)
+gsfda_k: 2
+cowa_alpha: 1.0               # Beta(alpha, alpha) for weight mixup
+cowa_coeff: JMDS              # JMDS | LPG | PPL
+cowa_eps: 1.0e-6
+dac_k_nbor: 5
+dac_temp: 0.05
+dac_momentum: 0.2
+dac_topk_frac: 0.1            # initial source-like set: top-(frac * N / C) per class
+dac_p_threshold: 0.97
+dac_cls_par: 0.3
+dac_lambda_m: 0.5
+dac_lambda_ad: 0.2
+mbns_lambda_bn: 1.0
+smna_tau: 0.90
+smna_label_smoothing: 0.1
+smna_lambda_bn: 1.0
+smna_lambda_pl: 1.0
+smna_temp: 0.5
+
+# ---------------------------------------------------------------- imbalance study
+imb_subset: false             # true = adapt on a controlled sub-sample of the target train split
+imb_ratio: 1.0                # imbalance ratio of the unlabeled adaptation subset
+imb_base: 1000                # images of the largest class in the subset
+imb_class_order: canonical    # canonical (class index order) | random (seeded)
+imb_subset_seed: 0            # same sub-sample for every method and seed

@@ -1,0 +1,58 @@
+# Configuration selected by the label-free pilot of the paper (Section 5.1), read by every run on
+# top of configs/defaults.yaml. Pilot: the 8 configurations of PILOT_GRID (cabsfda/experiments.py),
+# seed 0, tasks A2C, M2R, G2N, E2W; ranked by the mean rank of the Soft Neighborhood Density (SND)
+# on the unlabeled adaptation images; configurations with a collapsed prediction distribution
+# (normalized predicted-class entropy < 0.8 on any pilot task) excluded. No target label is used.
+# To redo the selection: delete this file and run
+#   CABSFDA_NO_SELECTED=1 python launch.py --groups pilot --seeds 0 && python select_hparams.py
+# The SND scores of the pilot runs are kept below for reference (higher is better).
+selected: ema0.999
+overrides:
+  ema_momentum: 0.999
+criterion: mean rank of SND over pilot tasks
+pilot_tasks:
+- A2C
+- M2R
+- G2N
+- E2W
+snd:
+  default:
+    A2C: 6.00710391998291
+    M2R: 5.509925842285156
+    G2N: 6.097087860107422
+    E2W: 3.8575053215026855
+  cons1.0:
+    A2C: 6.002181053161621
+    M2R: 5.465667724609375
+    G2N: 6.213819980621338
+    E2W: 4.005014896392822
+  cons0.1:
+    A2C: 6.0120415687561035
+    M2R: 5.520356178283691
+    G2N: 6.086747646331787
+    E2W: 3.592954158782959
+  proto0.5:
+    A2C: 6.010171890258789
+    M2R: 5.511163234710693
+    G2N: 6.101591110229492
+    E2W: 3.8814899921417236
+  ema0.999:
+    A2C: 6.020823955535889
+    M2R: 5.546639442443848
+    G2N: 6.190153121948242
+    E2W: 3.8597798347473145
+  ema0.95:
+    A2C: 6.00684928894043
+    M2R: 5.550106525421143
+    G2N: 6.09775447845459
+    E2W: 3.813861608505249
+  pl1.0:
+    A2C: 6.004782676696777
+    M2R: 5.4837727546691895
+    G2N: 6.156010627746582
+    E2W: 3.9687142372131348
+  lr5e-3:
+    A2C: 5.996746063232422
+    M2R: 5.492554187774658
+    G2N: 6.107292175292969
+    E2W: 4.0510454177856445

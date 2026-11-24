@@ -1,1 +1,151 @@
+# Dataset definitions used by prepare_data.py and by every run.
+#
+# 1. Download the raw datasets (see README, "Datasets").
+# 2. Either set DATA_ROOT so that the default paths below exist, e.g.
+#        export DATA_ROOT=/path/to/datasets
+#    or edit each `root:` to the folder that contains one sub-folder per class.
+# 3. Run `python prepare_data.py`. It resolves every canonical class to exactly
+#    one folder (first alias that exists, matched case-insensitively and ignoring
+#    spaces/underscores/hyphens) and stops with the list of available folders if
+#    a class cannot be resolved.
+#
+# Pre-split folders (source_<name>_split / target_<name>_split):
+# use `python import_splits.py --src <folder>` instead of prepare_data.py. It matches the
+# class folders against the aliases below and the canonical class name, and ignores `root:`.
+#
+# A class can gather several folders with "A+B" (e.g. AID residential). prepare_data.py
+# prints and saves the per-class counts (data/splits/summary.csv); compare them with the
+# counts of the paper (Tables 3, 4 and 18) or use the released splits (--reference splits).
 
+split:
+  train_fraction: 0.7         # stratified per class: n_train = floor(0.7 * n_c + 0.5)
+  seed: 2024                  # fixed split, shared by all seeds and methods
+
+benchmarks:
+  cross_scene:
+    classes: [farmland, forest, industrial, meadow, parking, residential, river]
+    domains: [AID, CLRS, MLRSN, RSSCN7]
+  nwpu_nasc:
+    classes: [beach, circular_farmland, cloud, desert, forest, mountain,
+              rectangular_farmland, residential, river, snowberg]
+    domains: [NWPU, NaSC]
+  whu_eurosat:
+    classes: [farmland, forest, industrial, meadow, residential, river]
+    domains: [WHU, EuroSAT]
+
+# task -> (source domain, target domain, benchmark)
+tasks:
+  A2C: [AID, CLRS, cross_scene]
+  A2M: [AID, MLRSN, cross_scene]
+  A2R: [AID, RSSCN7, cross_scene]
+  C2A: [CLRS, AID, cross_scene]
+  C2M: [CLRS, MLRSN, cross_scene]
+  C2R: [CLRS, RSSCN7, cross_scene]
+  M2A: [MLRSN, AID, cross_scene]
+  M2C: [MLRSN, CLRS, cross_scene]
+  M2R: [MLRSN, RSSCN7, cross_scene]
+  R2A: [RSSCN7, AID, cross_scene]
+  R2C: [RSSCN7, CLRS, cross_scene]
+  R2M: [RSSCN7, MLRSN, cross_scene]
+  N2G: [NWPU, NaSC, nwpu_nasc]
+  G2N: [NaSC, NWPU, nwpu_nasc]
+  E2W: [EuroSAT, WHU, whu_eurosat]
+  W2E: [WHU, EuroSAT, whu_eurosat]
+
+domains:
+  AID:
+    root: ${DATA_ROOT}/AID
+    benchmark: cross_scene
+    classes:
+      farmland: [Farmland]
+      forest: [Forest]
+      industrial: [Industrial]
+      meadow: [Meadow]
+      parking: [Parking]
+      residential: [DenseResidential+MediumResidential]   # 410 + 290 = 700 images, as in the paper
+      river: [River]
+  CLRS:
+    root: ${DATA_ROOT}/CLRS
+    benchmark: cross_scene
+    classes:
+      farmland: [farmland]
+      forest: [forest]
+      industrial: [industrial]
+      meadow: [meadow]
+      parking: [parking]
+      residential: [residential]
+      river: [river]
+  MLRSN:
+    root: ${DATA_ROOT}/MLRSNet/Images
+    benchmark: cross_scene
+    classes:
+      farmland: [farmland]
+      forest: [forest]
+      industrial: [industrial_area, industrial]
+      meadow: [meadow]
+      parking: [parking_lot, parking]
+      residential: [dense_residential_area, residential]
+      river: [river]
+  RSSCN7:
+    root: ${DATA_ROOT}/RSSCN7
+    benchmark: cross_scene
+    classes:
+      farmland: [bField, field]
+      forest: [eForest, forest]
+      industrial: [cIndustry, industry]
+      meadow: [aGrass, grass]
+      parking: [gParking, parking]
+      residential: [fResident, resident]
+      river: [dRiverLake, riverlake, river]
+  NWPU:
+    root: ${DATA_ROOT}/NWPU-RESISC45
+    benchmark: nwpu_nasc
+    classes:
+      beach: [beach]
+      circular_farmland: [circular_farmland]
+      cloud: [cloud]
+      desert: [desert]
+      forest: [forest]
+      mountain: [mountain]
+      rectangular_farmland: [rectangular_farmland]
+      residential: [dense_residential, medium_residential, sparse_residential]
+      river: [river]
+      snowberg: [snowberg]
+  NaSC:
+    # RGB release of NaSC-TG2 (128 x 128 true-colour images). No PCA is applied.
+    root: ${DATA_ROOT}/NaSC-TG2
+    benchmark: nwpu_nasc
+    classes:
+      beach: [beach]
+      circular_farmland: [circular_farmland, circularfarmland]
+      cloud: [cloud]
+      desert: [desert]
+      forest: [forest]
+      mountain: [mountain]
+      rectangular_farmland: [rectangular_farmland, rectangularfarmland]
+      residential: [residential]
+      river: [river]
+      snowberg: [snowberg]
+  WHU:
+    root: ${DATA_ROOT}/WHU-RS19
+    benchmark: whu_eurosat
+    max_per_class: null        # set to 50 if the paper's 50-per-class subset is kept
+    classes:
+      farmland: [Farmland]
+      forest: [Forest]
+      industrial: [Industrial, Industry]
+      meadow: [Meadow]
+      residential: [Residential]
+      river: [River]
+  EuroSAT:
+    # RGB release of EuroSAT (Sentinel-2 bands B4, B3, B2; 64 x 64 at 10 m). Older archives
+    # extract to a folder named "2750" - point root there in that case.
+    root: ${DATA_ROOT}/EuroSAT_RGB
+    benchmark: whu_eurosat
+    classes:
+      farmland: [AnnualCrop, Farmland]
+      forest: [Forest]
+      industrial: [Industrial, Industry]
+      meadow: [Pasture, Meadow]
+      residential: [Residential]
+      river: [River]
