@@ -414,6 +414,13 @@ def main():
             sig_rows.append({"baseline": m, "column": "Wilcoxon over cross-scene tasks", "n_seeds": len(ok),
                              "diff_mean": float(np.mean([x - y for x, y in ok])), "p_paired": w.pvalue,
                              "p_welch": np.nan, "p_paired_holm": np.nan})
+    # Holm correction of the Wilcoxon p-values over the baselines
+    wrows = sorted([r for r in sig_rows if r["column"] == "Wilcoxon over cross-scene tasks"],
+                   key=lambda r: r["p_paired"])
+    running = 0.0
+    for i, r in enumerate(wrows):
+        running = max(running, min(1.0, (len(wrows) - i) * r["p_paired"]))
+        r["p_paired_holm"] = running
     if sig_rows:
         with open(out / "significance_full.csv", "w", newline="") as f:
             w = csv.DictWriter(f, fieldnames=["baseline", "column", "n_seeds", "diff_mean", "p_paired",
@@ -423,7 +430,8 @@ def main():
         show = ["Avg. cross-scene", "Avg. cross-sensor", *B["cross_sensor"], "Wilcoxon over cross-scene tasks"]
         t = Table("significance", "CAB-SFDA vs. each baseline: OA difference (CAB-SFDA minus baseline, percentage "
                   "points) and two-sided paired t-test over seeds (same source model per seed), Holm-adjusted over the "
-                  "baselines; last column: Wilcoxon signed-rank test over the 12 cross-scene task means. n/a: the "
+                  "baselines; last column: Wilcoxon signed-rank test over the 12 cross-scene task means, Holm-adjusted "
+                  "over the baselines. n/a: the "
                   "difference is identical in every seed (t-test undefined). All p-values (raw, Holm, Welch) in significance_full.csv.", show)
         for m in BASE:
             cells = []
@@ -432,7 +440,7 @@ def main():
                 if r is None:
                     cells.append("--")
                 else:
-                    p = r["p_paired"] if c.startswith("Wilcoxon") else r.get("p_paired_holm", r["p_paired"])
+                    p = r.get("p_paired_holm", r["p_paired"])
                     cells.append(f"{r['diff_mean']:+.2f} ({fmt_p(p)})")
             t.add(DISPLAY_NAMES[m], cells)
         tables.append(t)

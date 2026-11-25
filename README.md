@@ -67,10 +67,14 @@ the paper; `aggregate.py` regenerates all of them.
 
 `paper_results/run_inventory.csv` lists the 3,182 runs behind the paper (experiment group, method,
 variant, backbone, task, seed) with the test accuracy of the source model and of the adapted model
-in each run, taken from the run logs. Every number in the tables of the paper is a mean over rows of
-this file. The configuration of a run is `configs/defaults.yaml` + `configs/selected.yaml` + the
-overrides of its variant in `cabsfda/experiments.py` (`python launch.py --groups <group> --dry-run`
-lists them).
+in each run, taken from the run logs. The overall accuracies of the paper's tables (means, standard
+deviations, runs below the source model, and the tests on them) can be recomputed from this file
+(up to the rounding of the logged two-decimal values); per-class metrics, PGAT diagnostics,
+computational costs, and the pilot statistics are not in it: they are written by `aggregate.py`
+from the per-run result files, and the pilot statistics are listed in `configs/selected.yaml`.
+Per-run configurations are not stored in this repository; they are determined by
+`configs/defaults.yaml` + `configs/selected.yaml` + the overrides of the run's variant in
+`cabsfda/experiments.py` (`python launch.py --groups <group> --dry-run` lists the runs).
 
 ## Repository structure
 
@@ -95,8 +99,10 @@ launch.py                runs experiment groups on several GPUs (resumable)
 run.py                   a single run
 select_hparams.py        label-free hyperparameter selection (SND) from the pilot runs
 check_results.py         consistency audit and coverage check of all result files
+ablation_tests.py        statistical tests of the ablation variants against the default (Table 13)
 aggregate.py             all tables (LaTeX, CSV, Markdown) and statistical tests -> tables/
 make_figures.py          confusion matrices, t-SNE, sensitivity curves, radar, PGAT dynamics -> figures/
+                         (drawn at their printed size; --paper DIR also writes the paper's file names)
 run_all.sh               the complete pipeline, in order
 setup_env.sh             conda environment with pinned versions
 smoke_test.sh            end-to-end test on a tiny synthetic dataset
