@@ -5,7 +5,9 @@
 # (normalized predicted-class entropy < 0.8 on any pilot task) excluded. No target label is used.
 # To redo the selection: delete this file and run
 #   CABSFDA_NO_SELECTED=1 python launch.py --groups pilot --seeds 0 && python select_hparams.py
-# The SND scores of the pilot runs are kept below for reference (higher is better).
+# The SND scores of the pilot runs are kept below for reference (higher is better), followed by the
+# normalized predicted-class entropy of each run (2 decimals, as printed by select_hparams.py
+# --dry-run). proto0.5, cons1.0, lr5e-3 and pl1.0 were excluded (entropy < 0.8 on E2W).
 selected: ema0.999
 overrides:
   ema_momentum: 0.999
@@ -56,3 +58,45 @@ snd:
     M2R: 5.492554187774658
     G2N: 6.107292175292969
     E2W: 4.0510454177856445
+excluded: [proto0.5, cons1.0, lr5e-3, pl1.0]
+pred_class_entropy:
+  ema0.999:
+    A2C: 0.99
+    M2R: 0.98
+    G2N: 0.94
+    E2W: 0.80
+  ema0.95:
+    A2C: 0.99
+    M2R: 0.98
+    G2N: 0.98
+    E2W: 0.81
+  cons0.1:
+    A2C: 1.00
+    M2R: 1.00
+    G2N: 0.99
+    E2W: 0.92
+  default:
+    A2C: 0.99
+    M2R: 1.00
+    G2N: 0.98
+    E2W: 0.80
+  proto0.5:
+    A2C: 0.99
+    M2R: 1.00
+    G2N: 0.98
+    E2W: 0.79
+  cons1.0:
+    A2C: 0.99
+    M2R: 0.99
+    G2N: 0.92
+    E2W: 0.73
+  lr5e-3:
+    A2C: 0.99
+    M2R: 1.00
+    G2N: 0.97
+    E2W: 0.70
+  pl1.0:
+    A2C: 0.99
+    M2R: 0.99
+    G2N: 0.95
+    E2W: 0.77
